@@ -83,6 +83,11 @@ class Tx_Pagewizard_Controller_PageWizardController extends
 			$values['command'] = $get['cmd'];
 		}
 
+		$values['webListModuleToken'] = '';
+		if (t3lib_div::int_from_ver(TYPO3_version) > 6002000) {
+			$values['webListModuleToken'] = '&moduleToken=' . \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('moduleCall', 'web_list');
+		}
+
 		switch ($values['command']) {
 			case 'crPage':
 					// Show page tree templates
