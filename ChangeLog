@@ -1,3 +1,8 @@
+2014-08-22  Michiel Roos <extensions@maxserv.nl>
+	* Fix moduleToken for TYPO3 6.2
+	* Re-enable web menu item
+	* Add note about recursive copying to manual
+
 2013-11-18  Michiel Roos <extensions@maxserv.nl>
 	* Remove condition to detect TYPO3 version
 	* Always expand first level of trees
