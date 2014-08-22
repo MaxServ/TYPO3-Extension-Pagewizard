@@ -118,12 +118,19 @@ class Tx_Pagewizard_Controller_PageWizardController extends
 					// Show position chooser
 				$pageRecord = t3lib_BEfunc::readPageAccess($id, $GLOBALS['BE_USER']->getPagePermsClause(1));
 
-				$values['positionMap'] = $this->processPositionMapLinks($positionMap->positionTree(
-					t3lib_div::_GET('id'),
-					$pageRecord,
-					$GLOBALS['BE_USER']->getPagePermsClause($id),
-					t3lib_div::getIndpEnv('REQUEST_URI')
-				));
+				$moduleToken = '';
+				if (t3lib_div::int_from_ver(TYPO3_version) > 6002000) {
+					$moduleToken = \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('moduleCall', 'web_PagewizardTxPagewizard');
+				}
+				$values['positionMap'] = $this->processPositionMapLinks(
+					$positionMap->positionTree(
+						t3lib_div::_GET('id'),
+						$pageRecord,
+						$GLOBALS['BE_USER']->getPagePermsClause($id),
+						t3lib_div::getIndpEnv('REQUEST_URI')
+					),
+					$moduleToken
+				);
 		}
 		$this->view->assignMultiple($values);
 	}
@@ -245,10 +252,11 @@ class Tx_Pagewizard_Controller_PageWizardController extends
 	 * - positionPid=39833
 	 *
 	 * @param string  $content Content to be processed
+	 * @param string  $moduleToken The moduleToken
 	 *
 	 * @return string The processed and modified content
 	 */
-	protected function processPositionMapLinks($content) {
+	protected function processPositionMapLinks($content, $moduleToken) {
 		$search = array(
 			'/window\.location\.href=\'([^?]*)\?/',
 			'/positionPid=(-?)([0-9]+)\'/',
@@ -257,9 +265,9 @@ class Tx_Pagewizard_Controller_PageWizardController extends
 		);
 
 		$replace = array(
-			'window.location.href=\'mod.php?M=web_PagewizardTxPagewizard&amp;',
+			'window.location.href=\'mod.php?M=web_PagewizardTxPagewizard&amp;moduleToken=' . $moduleToken . '&amp;',
 			'positionPid=$1$2&id=$2\'',
-			'mod.php?M=web_PagewizardTxPagewizard&amp;',
+			'mod.php?M=web_PagewizardTxPagewizard&amp;moduleToken=' . $moduleToken . '&amp;',
 			'edit[pages][$1$2]=$3&id=$2&amp;'
 		);
 		return preg_replace($search, $replace, $content);
@@ -284,7 +292,7 @@ class localPageTree extends t3lib_pageTree {
 	 * @return string The attribute value (is htmlspecialchared() already)
 	 * @see wrapIcon()
 	 */
-	function getTitleAttrib($row) {
+	public function getTitleAttrib($row) {
 		return 'uid ' . $row['uid'] . ': ' . htmlspecialchars($row['title']);
 	}
 
@@ -297,7 +305,7 @@ class localPageTree extends t3lib_pageTree {
 	 *
 	 * @return boolean Returns TRUE if the IDs matches
 	 */
-	function expandNext($id) {
+	public function expandNext($id) {
 		return $id == $GLOBALS['SOBE']->id ? 1 : 0;
 	}
 }

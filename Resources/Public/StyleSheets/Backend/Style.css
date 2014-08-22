@@ -1,10 +1,15 @@
 /**
  * Hide the menu item from the web module since this module only makes sense
  * when being invoked from the clickmenu.
- */
+
+ * Or does it?
+
+ * I'm re-enabling it because of bug https://forge.typo3.org/issues/59968
+
 #typo3-menu #web_PagewizardTxPagewizard {
 	display: none;
 }
+ */
 
 .nobr img {
 	vertical-align: middle;

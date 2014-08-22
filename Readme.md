@@ -1,5 +1,5 @@
 Pagewizard
-==============
+==========
 
 Create new page trees with an easy-to-use step by step wizard. New page trees are cloned from predefined page trees which of course can hold content elements.
 * Ever got tired of creating the same page tree over and over again by hand?
@@ -21,6 +21,10 @@ module.tx_pagewizard {
 	}
 }
 ```
+
+Make sure you can copy pages recursively:
+* Go to User Settings > Edit & Advanced functions > Recursive Copy
+* Enter the number of page sublevels to include, when a page is copied
 
 ## TODO
 * Create 6.2 compatible version

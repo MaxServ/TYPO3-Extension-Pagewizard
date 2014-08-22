@@ -27,6 +27,11 @@ if (TYPO3_MODE == 'BE') {
 		)
 	);
 
+	$moduleToken = '';
+	if (t3lib_div::int_from_ver(TYPO3_version) > 6002000) {
+		$moduleToken = \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('moduleCall', 'web_PagewizardTxPagewizard');
+	}
+
 		// Add the menu item to the page tree context menu
 	$createPageTreeAction = '
 		10 = ITEM
@@ -35,7 +40,7 @@ if (TYPO3_MODE == 'BE') {
 			label = LLL:EXT:pagewizard/Resources/Private/Language/locallang.xml:title
 			spriteIcon = actions-page-new
 			callbackAction = openCustomUrlInContentFrame
-			customAttributes.contentUrl = /typo3/mod.php?M=web_PagewizardTxPagewizard&id=###ID###
+			customAttributes.contentUrl = /typo3/mod.php?M=web_PagewizardTxPagewizard&moduleToken=' . $moduleToken . '&id=###ID###
 		}
 		20 = DIVIDER
 		';
